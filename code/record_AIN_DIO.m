@@ -73,10 +73,7 @@ switch lower(op)
 			error('DigitalIn - channel out of range');
 		end    
 		
-% 		% reset to factory defaults
-% 		[Error] = ljud_ePut(dev, LJ_ioPIN_CONFIGURATION_RESET, 0, 0, 0);
-% 		Error_Message(Error)
-		% Configure channel to be a digital input
+		% Configure channel to be a digital input - consider using Nicolas's code for this
 		Error = ljud_AddRequest(dev,LJ_ioPUT_ANALOG_ENABLE_BIT,channel,0,0,0);
 		Error_Message(Error)
 		% Call eGet function to get AIN single-ended voltage.
@@ -112,9 +109,6 @@ switch lower(op)
 		global final_array
 		final_array = [];
 		
-% 		% reset to factory defaults
-% 		[Error] = ljud_ePut(dev, LJ_ioPIN_CONFIGURATION_RESET, 0, 0, 0);
-% 		Error_Message(Error)
 		for m = 1:num_channels
 			% Configure channel to be an analog input
 			Error = ljud_AddRequest(dev,LJ_ioPUT_ANALOG_ENABLE_BIT,channel(m),1,0,0);
