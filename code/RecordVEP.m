@@ -9,7 +9,7 @@ function [vepDataStruct] = RecordVEP(varargin)
 %    timebase is in units of msecs. Response is the voltage measured from
 %    the EEG device during the recording period.
 %
-%  'channelIDs' - list of  channels to aquire from (AIN1 = 1, AIN2 = 2, AIN3 = 3)
+%  'channelIDs' - list of  channels to acquire from (AIN1 = 1, AIN2 = 2, AIN3 = 3)
 
 
 %% Parse input
@@ -34,7 +34,7 @@ else
     labjackOBJ = LabJackU6('verbosity', double(p.Results.verbose));
     
     try
-        % Configure analog input sampling
+        % Configure analog input sampling (VEP data on AIN1=channel ID 1)
         labjackOBJ.configureAnalogDataStream(p.Results.channelIDs, p.Results.frequencyInHz);
         
         % Acquire the data
