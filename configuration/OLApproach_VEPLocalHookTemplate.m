@@ -18,8 +18,6 @@ function OLApproach_VEPLocalHook
 fprintf('Running OLApproach_VEP local hook\n');
 theApproach = 'OLApproach_VEP';
 
-%% Define protocols for this approach
-theProtocols = DefineProtocolNames;
 %% Remove old preferences
 if (ispref(theApproach))
     rmpref(theApproach);
@@ -58,16 +56,6 @@ setpref(theApproach,'DataPath',fullfile(dataBasePath));
 %% Set pref to point at the code for this approach
 setpref(theApproach,'CodePath', fullfile(tbLocateProject(theApproach),'code'));
 
-
-%% Prefs for individual protocols
-for pp = 1:length(theProtocols)
-
-    % Session record base path
-    setpref(theProtocols{pp},'SessionRecordsBasePath',fullfile(getpref(theApproach, 'DataPath'),'Experiments',theApproach,theProtocols{pp},'SessionRecords'));
-    
-    % Data files base path
-    setpref(theProtocols{pp},'DataFilesBasePath',fullfile(getpref(theApproach, 'DataPath'),'Experiments',theApproach,theProtocols{pp},'DataFiles'));
-end
 
 %% Set the default speak rate
 setpref(theApproach, 'SpeakRateDefault', 230);
