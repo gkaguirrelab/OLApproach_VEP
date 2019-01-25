@@ -1,5 +1,5 @@
 function OLApproach_VEPLocalHook
-% Oonfigure things for working on OneLight projects.
+% Configure things for working on MELA VEP/metropsis project
 %
 % For use with the ToolboxToolbox.  If you copy this into your
 % ToolboxToolbox localToolboxHooks directory (by default,
@@ -21,11 +21,6 @@ theApproach = 'OLApproach_VEP';
 %% Remove old preferences
 if (ispref(theApproach))
     rmpref(theApproach);
-end
-for pp = 1:length(theProtocols)
-    if (ispref(theProtocols{pp}))
-        rmpref(theProtocols{pp});
-    end
 end
 
 %% Specify base paths for materials and data
