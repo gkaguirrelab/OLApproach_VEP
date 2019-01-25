@@ -2,8 +2,9 @@ function [vepDataStruct] = RecordVEP(varargin)
 % function [vepDataStruct] = RecordVEP(varargin)
 %
 % Utility routine to openn communication with a LabJack device, and then
-% record data for a specified number of seconds. 
-%
+% record data for a specified number of seconds.
+% INPUT:
+%   recordingDurationSecs - the length of recording for a single stimulus block in seconds
 % OUTPUT:
 %    vepDataStruct - A structure with the fields timebase and response.
 %    timebase is in units of msecs. Response is the voltage measured from
