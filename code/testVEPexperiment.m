@@ -17,7 +17,24 @@ function [expParam, VEP] = testVEPexperiment()
 
 %% Test Microphone recording
 
-%% VEP recording
+recObj=audiorecorder;
+
+% record 5 seconds of audio for testing purposes
+disp('Start speaking.')
+recordblocking(recObj, 5);
+disp('End of Recording.');
+
+% play back audio
+play(recObj)
+
+% plot audio trace
+y = getaudiodata(recObj);
+plot(y)
+ylabel('Amplitude')
+xlabel('Time (s)')
+title('Audio Output')
+
+%% Test VEP recording
 
 VEP=RecordVEP();
 

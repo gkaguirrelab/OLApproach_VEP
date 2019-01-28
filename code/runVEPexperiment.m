@@ -36,15 +36,9 @@ end
 
 %% Microphone recording
 
-% grab audio data
-audioOutput = getaudiodata(audioRecObj);
-
-% plot audio trace
-plotFig = figure('name', 'plotFig');
-plot(0:4/64000:4-1/64000, audioOutput)
-ylabel('Amplitude')
-xlabel('Time (s)')
-title('Audio Output')
+recObj=audiorecorder;
+audioRec.Fs=recObj.SampleRate;
+record(recObj,220);
 
 
 %% VEP recording
@@ -58,6 +52,6 @@ VEP=RecordVEP();
 
 filename=['Exp' expParam.experimentID '_' expParam.observerID expParam.sessionID '.mat'];
 
-save(filename,'VEP','expParam')
+save(filename,'VEP','expParam','audioRec')
 
 end % end function
