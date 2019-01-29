@@ -1,4 +1,4 @@
-function [expParam, VEP] = runVEPexperiment()
+function [expParam, VEP, audioRec] = runVEPexperiment()
 % A function that runs a metropsis VEP experiment
 
 % Syntax:
@@ -27,30 +27,31 @@ expParam.experimentID=input('Enter experiment ID:','s');
 expParam.sessionID=input('Enter session ID:','s');
 expParam.Date = datestr(now, 'yyyy-mm-dd');
 
-%% Prep to save
-savePath = fullfile([getpref('OLApproach_VEP', 'DataPath') 'Experiments/OLApproach_VEP/'...
-     expParam.experimentID '/Subject_' observerID]);
-if ~exist(savePath,'dir')
-    mkdir(savePath);
-end
-
 %% Microphone recording
 
 recObj=audiorecorder;
-audioRec.Fs=recObj.SampleRate;
 record(recObj,220);
 
 
 %% VEP recording
 
-VEP=RecordVEP();
+VEP=RecordVEP('recordingDurationSecs',220);
 
-%% Save VEP, parameter, and microphone data
+%% Save VEP, parameter, and audio VDS data
+savePath = fullfile([getpref('OLApproach_VEP', 'DataPath') 'Experiments/OLApproach_VEP/'...
+     'Exp_' expParam.experimentID '/Subject_' expParam.observerID]);
+if ~exist(savePath,'dir')
+    mkdir(savePath);
+end
 
 % convention for saving the VEP data file is Experiment ID, observer ID,
 % and session ID
 
-filename=['Exp' expParam.experimentID '_' expParam.observerID expParam.sessionID '.mat'];
+filename=[savePath '/Exp' expParam.experimentID '_' expParam.observerID expParam.sessionID '.mat'];
+
+
+audioRec.Fs=recObj.SampleRate;
+audioRec.data=getaudiodata(recObj);
 
 save(filename,'VEP','expParam','audioRec')
 

@@ -1,4 +1,4 @@
-function [expParam, VEP] = testVEPexperiment()
+function [VEP, audioRec] = testVEPexperiment()
 % A function that runs pre-experiment testing for
 % OLApproach_VEP Experiments
 
@@ -7,12 +7,6 @@ function [expParam, VEP] = testVEPexperiment()
 
 % Description:
 %   This function tests the functioning of the VEP, TTL pulse from metropsis and microphone
-
-%
-% Output:
-%  expParams           - A structure that defines the specifics of the
-%                             experiment (observer ID, session ID,
-%                             channel protocol, and date of experiment)
 
 
 %% Test Microphone recording
@@ -27,16 +21,25 @@ disp('End of Recording.');
 % play back audio
 play(recObj)
 
+audioRec.Fs=recObj.SampleRate;
+audioRec.data=getaudiodata(recObj);
+
 % plot audio trace
-y = getaudiodata(recObj);
-plot(y)
+figure(1)
+plot(audioRec.data)
 ylabel('Amplitude')
 xlabel('Time (s)')
 title('Audio Output')
 
 %% Test VEP recording
 
-VEP=RecordVEP();
+% Record 5 seconds of VEP data for testing purposes
+VEP=RecordVEP('recordingDurationSecs',5);
 
+figure(2)
+plot(VEP.timebase,VEP.response(2,:))
+title('VEP'); xlabel('time(s)');ylabel('mV');
+ax=gca;
+ax.Box='off'; ax.TickDir='out';
 
 end % end function
