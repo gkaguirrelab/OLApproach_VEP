@@ -1,16 +1,39 @@
-function [vepDataStruct] = RecordVEP(varargin)
-% function [vepDataStruct] = RecordVEP(varargin)
+function [vepDataStruct] = recordVEP(varargin)
+% Records VEP data via a call to the LabJack device
 %
-% Utility routine to openn communication with a LabJack device, and then
-% record data for a specified number of seconds.
-% INPUT:
-%   recordingDurationSecs - the length of recording for a single stimulus block in seconds
-% OUTPUT:
-%    vepDataStruct - A structure with the fields timebase and response.
-%    timebase is in units of msecs. Response is the voltage measured from
-%    the EEG device during the recording period.
+% Syntax:
+%  function [vepDataStruct] = RecordVEP(varargin)
 %
-%  'channelIDs' - list of  channels to acquire from, VEP data on AIN1=1, TTL data on AIN0=0
+% Description:
+%   Utility routine to openn communication with a LabJack device, and then
+%   record data for a specified number of seconds.
+%
+%   We record two analog channels from the LabJack. Channel 0 is the TTL
+%   pulse which is output from the Display++ monitor and read in through an
+%   analog channel on the LabJack. Channel 1 is the analog input from the
+%   biopack amplifier and carries the visual evoked potential signal.
+%
+% Inputs:
+%   none
+%
+% Optional key/value pair:
+%  'recordingDurationSecs' - Scalar. The length of recording for a single
+%                           stimulus block in seconds
+%  'channelIDs'           - 1xn vector of the analog channel to be
+%                           recorded from the LabJack. VEP data on AIN1=1,
+%                           TTL data on AIN0=0
+%  'frequencyInHz'        - Scalar.
+%  'verbose'              - Logical. Flag that is passed to the LabJack
+%                           object code to control verbosity.
+%
+% Output:
+%	vepDataStruct         - A structure with the fields:
+%                               timebase - 1xt vectors in units of msecs
+%                               response - 2xt vectors in voltage units
+%                                   measured from the TTL line in and EEG
+%                                   device during the recording period.
+%                               params - the p.Results structure
+%
 
 
 %% Parse input
@@ -18,44 +41,36 @@ p = inputParser;
 p.addParameter('recordingDurationSecs',2,@isnumeric);
 p.addParameter('channelIDs',[0 1],@isnumeric);
 p.addParameter('frequencyInHz',2000,@isnumeric);
-p.addParameter('simulate',false,@islogical);
 p.addParameter('verbose',false,@islogical);
 
 p.parse(varargin{:});
 
-if p.Results.simulate
-    vepDataStruct.timebase = 0:1/p.Results.frequencyInHz*1000:(p.Results.recordingDurationSecs*1000)-(1/p.Results.frequencyInHz*1000);
-    % Simulate a 1 Hz sinusoid with some noise
-    vepDataStruct.response = sin(vepDataStruct.timebase/1000*2*pi);
-    vepDataStruct.response = vepDataStruct.response + ...
-        normrnd(0,1,size(vepDataStruct.timebase,1),size(vepDataStruct.timebase,2));
-else
+
+%% Instantiate a LabJack object
+labjackOBJ = LabJackU6('verbosity', double(p.Results.verbose));
+
+%% Record the EEG
+% We place the recording in a try-catch block as mysterious errors can
+% occur in LabJack land.
+try
+    % Configure analog input sampling
+    labjackOBJ.configureAnalogDataStream(p.Results.channelIDs, p.Results.frequencyInHz);
     
-    % Instantiate a LabJack object to handle communication with the device
-    labjackOBJ = LabJackU6('verbosity', double(p.Results.verbose));
+    % Acquire the data
+    labjackOBJ.startDataStreamingForSpecifiedDuration(p.Results.recordingDurationSecs);
     
-    try
-        % Configure analog input sampling 
-        labjackOBJ.configureAnalogDataStream(p.Results.channelIDs, p.Results.frequencyInHz);
-        
-        % Acquire the data
-        labjackOBJ.startDataStreamingForSpecifiedDuration(p.Results.recordingDurationSecs);
-        
-        % Place the data in a response structure
-        %% NEED TO DO SOME WORK HERE TO LINK THE UNITS OF TIME TO THE STANDARD MSECS OF OUR PACKETS
-        vepDataStruct.timebase = labjackOBJ.timeAxis;
-        vepDataStruct.response = labjackOBJ.data;
-        vepDataStruct.response = vepDataStruct.response'; 
-        vepDataStruct.params = p.Results;
-        
-        % Close-up shop
-        labjackOBJ.shutdown();
-        
-    catch err
-        % Close up shop
-        labjackOBJ.shutdown();
-        rethrow(err)
-    end % try-catch
-end % is this real life or a simulation?
+    % Place the data in a response structure
+    vepDataStruct.timebase = labjackOBJ.timeAxis;
+    vepDataStruct.response = labjackOBJ.data';
+    vepDataStruct.params = p.Results;
+    
+    % Close-up shop
+    labjackOBJ.shutdown();
+    
+catch err
+    % Close up shop
+    labjackOBJ.shutdown();
+    rethrow(err)
+end % try-catch
 
 end % function
