@@ -1,9 +1,17 @@
-function [VEP, audioRec] = testVEPexperiment()
+function [VEP, audioRec] = testVEPexperiment(DurInSecs)
 % A function that runs pre-experiment testing for
-% OLApproach_VEP Experiments
+% OLApproach_VEP Experiments to ensure the VEP signal looks good, and the
+% microphone data is working properly
 
 % Syntax:
-%  [expParam] = testVEPexperiment();
+%  [expParam] = testVEPexperiment(DurInSecs);
+
+% INPUT
+% - DurInSecs specifies the duration in seconds to record the test data
+
+%OUTPUT
+% - VEP contains the VEP signal from AIN1
+% - audioRec is a struct that contains the audio data and frequency
 
 % Description:
 %   This function tests the functioning of the VEP, TTL pulse from metropsis and microphone
@@ -15,7 +23,7 @@ recObj=audiorecorder;
 
 % record 5 seconds of audio for testing purposes
 disp('Start speaking.')
-recordblocking(recObj, 5);
+recordblocking(recObj, DurInSecs);
 disp('End of Recording.');
 
 % play back audio
@@ -34,7 +42,7 @@ title('Audio Output')
 %% Test VEP recording
 
 % Record 5 seconds of VEP data for testing purposes
-VEP=RecordVEP('recordingDurationSecs',5);
+VEP=RecordVEP('recordingDurationSecs',DurInSecs);
 
 figure(2)
 plot(VEP.timebase,VEP.response(2,:))
