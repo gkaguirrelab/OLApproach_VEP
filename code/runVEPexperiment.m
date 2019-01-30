@@ -25,7 +25,7 @@ expParam=struct;
 expParam.observerID=input('Enter observer ID:','s');
 expParam.experimentID=input('Enter experiment ID:','s');
 expParam.sessionID=input('Enter session ID:','s');
-expParam.Date = datestr(now, 'yyyy-mm-dd');
+expParam.Date = datestr(datetime('now'));
 
 %% Microphone recording
 
