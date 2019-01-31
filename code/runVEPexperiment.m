@@ -18,9 +18,8 @@ function [expParam, vepDataStruct, audioRec] = runVEPexperiment(durInSecs)
 %   expParams             - A structure that defines the specifics of the
 %                           experiment (observer ID, session ID,
 %                           channel protocol, and date of experiment)
-%   VEP                   - A structure that contains VEP data, TTL pulse,
-%   and
-%                           timebase for both analog signals
+%   vepDataStruct           - A structure that contains VEP data, TTL pulse,
+%                           and timebase for both analog signals
 %   audioRec              - A structure that contains mic data, and 
 %                           sampling rate (Fs)
 %
@@ -65,6 +64,6 @@ end
 filename=['Exp' expParam.experimentID '_' expParam.observerID expParam.sessionID '.mat'];
 
 %% Save the data
-save(fullfile(savePath,filename),'VEP','expParam','audioRec')
+save(fullfile(savePath,filename),'vepDataStruct','expParam','audioRec')
 
 end % end function
