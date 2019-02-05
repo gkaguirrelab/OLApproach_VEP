@@ -42,7 +42,7 @@ title('Audio Output')
 %% Test VEP recording
 
 % Record 5 seconds of VEP data for testing purposes
-VEP=RecordVEP('recordingDurationSecs',DurInSecs);
+VEP=recordVEP('recordingDurationSecs',DurInSecs);
 
 figure(2)
 plot(VEP.timebase,VEP.response(2,:))
