@@ -40,7 +40,7 @@ function [vepDataStruct] = recordVEP(varargin)
 p = inputParser;
 p.addParameter('recordingDurationSecs',2,@isnumeric);
 p.addParameter('channelIDs',[0 1],@isnumeric);
-p.addParameter('frequencyInHz',2000,@isnumeric);
+p.addParameter('frequencyInHz',1000,@isnumeric);
 p.addParameter('verbose',false,@islogical);
 
 p.parse(varargin{:});
