@@ -1,4 +1,4 @@
-function [VEP, audioRec] = testVEPexperiment(DurInSecs)
+function [VEP, audioRec] = testVEPexperiment(DurInSecs,audioTest)
 % A function that runs pre-experiment testing for
 % OLApproach_VEP Experiments to ensure the VEP signal looks good, and the
 % microphone data is working properly
@@ -17,27 +17,28 @@ function [VEP, audioRec] = testVEPexperiment(DurInSecs)
 %   This function tests the functioning of the VEP, TTL pulse from metropsis and microphone
 
 
-% %% Test Microphone recording
-% 
-% recObj=audiorecorder;
-% 
-% % record 5 seconds of audio for testing purposes
-% disp('Start speaking.')
-% recordblocking(recObj, DurInSecs);
-% disp('End of Recording.');
-% 
-% % play back audio
-% play(recObj)
-% 
-% audioRec.Fs=recObj.SampleRate;
-% audioRec.data=getaudiodata(recObj);
-% 
-% % plot audio trace
-% figure(1)
-% plot(audioRec.data)
-% ylabel('Amplitude')
-% xlabel('Time (s)')
-% title('Audio Output')
+%% Test Microphone recording
+if audioTest==1
+    recObj=audiorecorder;
+
+    % record 5 seconds of audio for testing purposes
+    disp('Start speaking.')
+    recordblocking(recObj, DurInSecs);
+    disp('End of Recording.');
+
+    % play back audio
+    play(recObj)
+
+    audioRec.Fs=recObj.SampleRate;
+    audioRec.data=getaudiodata(recObj);
+
+    % plot audio trace
+    figure(1)
+    plot(audioRec.data)
+    ylabel('Amplitude')
+    xlabel('Time (s)')
+    title('Audio Output')
+end
 
 %% Test VEP recording
 
