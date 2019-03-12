@@ -46,6 +46,12 @@ end
 VEP=recordVEP('recordingDurationSecs',DurInSecs);
 
 figure(2)
+plot(VEP.timebase,VEP.response(1,:))
+title('VEP'); xlabel('time(s)');ylabel('mV');
+ax=gca;
+ax.Box='off'; ax.TickDir='out';
+
+figure(3)
 plot(VEP.timebase,VEP.response(2,:))
 title('VEP'); xlabel('time(s)');ylabel('mV');
 ax=gca;
